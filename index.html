@@ -43,7 +43,6 @@ async function unlock() {
     if (!text.trimStart().toLowerCase().startsWith('<!doctype') && !text.trimStart().toLowerCase().startsWith('<html')) {
       throw new Error('bad decrypt');
     }
-    // Replace entire document with decrypted content
     document.open();
     document.write(text);
     document.close();
