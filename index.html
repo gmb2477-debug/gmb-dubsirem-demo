@@ -21,7 +21,7 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFo
 <div id="lock-screen">
   <h1>GMB-DubSIreM</h1>
   <p>Demo — Enter password to access</p>
-  <input type="password" id="pw" placeholder="Password" autofocus onkeydown="if(event.key===\'Enter\')unlock()">
+  <input type="password" id="pw" placeholder="Password" autofocus onkeydown="if(event.key==='Enter')unlock()">
   <button onclick="unlock()">Unlock</button>
   <div id="error-msg">Incorrect password. Try again.</div>
 </div>
@@ -43,10 +43,11 @@ async function unlock() {
     if (!text.trimStart().toLowerCase().startsWith('<!doctype') && !text.trimStart().toLowerCase().startsWith('<html')) {
       throw new Error('bad decrypt');
     }
-    // Replace the entire document
-    var newDoc = document.open('text/html', 'replace');
-    newDoc.write(text);
-    newDoc.close();
+    // Create blob and navigate to it - this gives a clean document context
+    var blob = new Blob([text], {type: 'text/html;charset=utf-8'});
+    var url = URL.createObjectURL(blob);
+    // Use replace so the lock screen doesn't stay in history
+    location.replace(url);
   } catch(e) {
     console.error(e);
     document.getElementById('error-msg').style.display = 'block';
